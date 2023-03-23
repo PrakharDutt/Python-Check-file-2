@@ -18,7 +18,7 @@ jobs:
         id: script_changes
         run: |
           git fetch
-          git diff --name-only $(git rev-parse --verify HEAD~1)..HEAD | grep '\.py$' > changed_files.txt
+          git diff --name-only HEAD..HEAD^ | grep '\.py$' > changed_files.txt
           if [[ -s changed_files.txt ]]; then
               echo "::set-output name=script_changed::true"
           fi
