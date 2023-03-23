@@ -24,3 +24,7 @@ func_prime_or_not(input_a)
 
 print("prime number func check complete ")
 print("rama")
+
+print("rama")
+
+print("rama")
