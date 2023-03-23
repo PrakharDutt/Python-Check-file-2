@@ -24,5 +24,7 @@ func_prime_or_not(input_a)
 
 print("rama")
 print("rama")
+print("rama")
+print("rama")
 
 
