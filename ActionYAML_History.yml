@@ -1,0 +1,101 @@
+# YAML SCRIPT CHECK 1, it checks for change or not
+name: Python Script Change Checker
+
+on:
+  push:
+    paths:
+      - '**.py'
+  pull_request:
+    paths:
+      - '**.py'
+
+jobs:
+  check-script-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Check for script changes
+        run: |
+          git fetch
+          script_changed=$(git diff --name-only HEAD^ HEAD | grep '\.py$')
+          if [ -n "$script_changed" ]; then
+            echo "Changes detected in the following Python scripts:"
+            echo "$script_changed"
+          else
+            echo "No changes detected in Python scripts."
+            exit 1
+          fi
+
+#  YAML SCRIPT CHECK 2, it checks for change or not and then activates the pull or push
+name: Python Script Change Checker
+
+on:
+  push:
+    paths:
+      - '**.py'
+  pull_request:
+    paths:
+      - '**.py'
+
+jobs:
+  check-script-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Check for script changes
+        id: script_changes
+        run: |
+          git fetch
+          script_changed=$(git diff --name-only HEAD^ HEAD | grep '\.py$')
+          echo "::set-output name=script_changed::$script_changed"
+      - name: Create pull request
+        if: ${{ steps.script_changes.outputs.script_changed != '' }}
+        uses: peter-evans/create-pull-request@v3.8.1
+        with:
+          title: 'Python script changes'
+          commit-message: 'Update Python scripts'
+          branch: 'update-python-scripts'
+          delete-branch: true
+          reviewers: 'user1, user2'
+          body: 'Changes detected in the following Python scripts: \n\n ${{ steps.script_changes.outputs.script_changed }}'
+          
+
+
+#  YAML SCRIPT CHECK 3, it checks for change or not and then activates the pull or push
+
+name: Python Script Change Checker
+
+on:
+  push:
+    paths:
+      - '**.py'
+  pull_request:
+    paths:
+      - '**.py'
+
+jobs:
+  check-script-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Check for script changes
+        id: script_changes
+        run: |
+          git fetch
+          git diff --name-only HEAD..HEAD^ | grep '\.py$' > changed_files.txt
+          if [[ -s changed_files.txt ]]; then
+              echo "::set-output name=script_changed::true"
+          fi
+      - name: Create pull request
+        if: ${{ steps.script_changes.outputs.script_changed == 'true' }}
+        uses: peter-evans/create-pull-request@v3.8.1
+        with:
+          title: 'Python script changes'
+          commit-message: 'Update Python scripts'
+          branch: 'update-python-scripts'
+          delete-branch: true
+          reviewers: 'user1, user2'
+          body: 'Changes detected in the following Python scripts: \n\n $(cat changed_files.txt)'
