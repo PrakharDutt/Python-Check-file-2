@@ -22,4 +22,7 @@ def func_prime_or_not (input_a):
 input_a=int(input("enter the number 1 \n"))
 func_prime_or_not(input_a)
 
+print("rama")
+print("rama")
+
 
