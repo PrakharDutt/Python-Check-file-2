@@ -1,34 +1,36 @@
-name: Python Script Change Checker
+name: Check for Python file updates and create pull request
 
 on:
   push:
-    paths:
-      - '**.py'
-  pull_request:
-    paths:
-      - '**.py'
+    branches:
+      - Testing-branch-2
 
 jobs:
-  check-script-changes:
+  check-python-file:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Check for script changes
-        id: script_changes
-        run: |
-          git fetch:0
-          git diff --name-only HEAD $(git rev-list --max-parents=0 HEAD) | grep '\.py$' > changed_files.txt
-          if [[ -s changed_files.txt ]]; then
-              echo "::set-output name=script_changed::true"
-          fi
-      - name: Create pull request
-        if: ${{ steps.script_changes.outputs.script_changed == 'true' }}
-        uses: peter-evans/create-pull-request@v3.8.1
         with:
-          title: 'Python script changes'
-          commit-message: 'Update Python scripts'
-          branch: 'update-python-scripts'
-          delete-branch: true
-          reviewers: 'user1, user2'
-          body: 'Changes detected in the following Python scripts: \n\n $(cat changed_files.txt)'
+          ref: Testing-branch-2
+
+      - name: Check for Python file update
+        id: python-file-changes
+        run: |
+          if git diff --quiet HEAD~1 HEAD pythonfile_1.py; then
+            echo "No changes to Python file."
+          else
+            echo "Changes detected in Python file."
+          fi
+
+      - name: Create pull request
+        if: steps.python-file-changes.outputs.return-value != 'No changes to Python file.'
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Update Python file"
+          title: "Update Python file"
+          body: "Changes detected in Python file. This pull request updates Python file."
+          base: Testing-Branch-1
+          branch: Testing-branch-2
