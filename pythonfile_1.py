@@ -23,4 +23,6 @@ input_a=int(input("enter the number 1 \n"))
 func_prime_or_not(input_a)
 
 print("jai sia ram jai sia ram jai sia ram")
+print("jai sia ram jai sia ram jai sia ram")
+print("jai sia ram jai sia ram jai sia ram")
 
