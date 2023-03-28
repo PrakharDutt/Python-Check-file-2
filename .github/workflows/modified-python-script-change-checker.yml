@@ -1,6 +1,7 @@
 name: Check for Python file updates and create pull request
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - Testing-branch-2
