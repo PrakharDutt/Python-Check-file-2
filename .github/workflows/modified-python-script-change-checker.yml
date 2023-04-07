@@ -34,4 +34,4 @@ jobs:
           title: "Update Python file"
           body: "Changes detected in Python file. This pull request updates Python file."
           base: Testing-Branch-2
-          branch: Testing-branch-1
+          branch: Main
